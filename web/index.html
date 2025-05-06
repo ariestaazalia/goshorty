@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>GoShorty: Shortener</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 3rem 4rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        input[type="text"] {
+            padding: 1rem;
+            width: 100%;
+            font-size: 1.1rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        button {
+            padding: 0.9rem 2rem;
+            font-size: 1.1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .result a {
+            color: #007bff;
+            word-break: break-all;
+            text-decoration: none;
+        }
+
+        .result a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔗 GoShorty </h1>
+        <form action="/shorten" method="POST">
+            <input type="text" name="url" placeholder="Paste a long URL here..." required>
+            <br>
+            <button type="submit">Shorten</button>
+        </form>
+
+        {{if .Shortened}}
+        <div class="result">
+            Shortened URL:
+            <a href="{{.Shortened}}">{{.Shortened}}</a>
+        </div>
+        {{end}}
+    </div>
+</body>
+
+</html>
