@@ -1,4 +1,5 @@
 ## GoShorty: Go URL Shortener
+![GoShorty](image-1.png)
 
 A Simple URL shortener built with Go, designed to shorten long URLs and redirect to the original URL using a custom short code
 
