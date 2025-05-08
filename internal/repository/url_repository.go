@@ -1,6 +1,14 @@
 package repository
 
-import "errors"
+import (
+	"errors"
+	"time"
+)
+
+var (
+	ErrURLNotFound = errors.New("URL Not Found")
+	ErrURLExpired  = errors.New("URL Has Expired")
+)
 
 type URLRepository interface {
 	SaveURL(code, longURL string)
@@ -8,30 +16,49 @@ type URLRepository interface {
 	GetURLByShortCode(shortCode string) (string, error)
 }
 
+type URLData struct {
+	originalURL string
+	CreatedAt	time.Time
+}
+
 type InMemoryURLRepository struct {
-	URLs map[string]string
+	URLs map[string]URLData
 }
 
 func NewURLRepository() *InMemoryURLRepository {
-	return &InMemoryURLRepository{URLs: make(map[string]string)}
+	return &InMemoryURLRepository{
+		URLs: make(map[string]URLData),
+	}
 }
 
 func (repo *InMemoryURLRepository) SaveURL(code, longURL string) {
-	repo.URLs[code] = longURL
+	repo.URLs[code] = URLData{
+		originalURL: longURL,
+		CreatedAt: time.Now(),
+	}
 }
 
 func (repo *InMemoryURLRepository) GetURL(code string) (string, bool) {
-	url, exists := repo.URLs[code]
+	data, exists := repo.URLs[code]
+
+	if !exists {
+		return "", false
+	}
 	
-	return url, exists
+	return data.originalURL, true
 }
 
 func (repo *InMemoryURLRepository) GetURLByShortCode(shortCode string) (string, error) {
-	originalURL, exists := repo.URLs[shortCode]
+	data, exists := repo.URLs[shortCode]
 
 	if !exists {
-		return "", errors.New("URL Not Found")
+		return "", ErrURLNotFound
 	}
 
-	return originalURL, nil
+	if time.Since(data.CreatedAt) > 7*24*time.Hour {
+		delete(repo.URLs, shortCode)
+		return "", ErrURLExpired
+	}
+
+	return data.originalURL, nil
 }
