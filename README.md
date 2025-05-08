@@ -3,18 +3,19 @@
 
 A Simple URL shortener built with Go, designed to shorten long URLs and redirect to the original URL using a custom short code
 
-### Features
-- Shorten URLs: Enter a long URL, and get a shortened version
-- Redirect to Original URL: Use the shortened URL to be redirected to the original URL.
-- Dynamic URL Creation: The base URL is dynamically generated, so it works both on local and production environments.
+### ✨ Features
+- 🔗 **Shorten URLs**: Enter a long URL and get a shortened version.
+- 🚀 **Redirect to Original URL**: Use the shortened URL to be redirected to the original destination.
+- 🌐 **Dynamic Base URL**: Automatically detects the environment (localhost or production) and builds the correct base URL.
+- ⏰ **Expiration Support**: Shortened URLs automatically expire after 7 days and return a proper error message when expired.
 
-### Prequisites
+### ✅ Prequisites
 Make sure you have the following installed:
 
-- Go (latest version preferred)
+- [Go](https://go.dev/dl/) (latest version preferred)
 - Git
 
-### Installation 
+### 🚀 Installation 
 1. Clone the repository:
 ```
 git clone https://github.com/ariestaazalia/goshorty.git
