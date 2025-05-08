@@ -1,9 +1,11 @@
 package handler
 
 import (
+	"errors"
 	"html/template"
 	"net/http"
 
+	"github.com/ariestaazalia/goshorty/internal/repository"
 	"github.com/ariestaazalia/goshorty/internal/service"
 )
 
@@ -61,7 +63,29 @@ func (h *URLHandler) Redirect(w http.ResponseWriter, r *http.Request) {
 	originalURL, err := h.Service.GetOriginalURL(code)
 
 	if err != nil {
-		http.NotFound(w, r)
+		if errors.Is(err, repository.ErrURLExpired) {
+			tmpl, _ := template.ParseFiles("web/error.html")
+			w.WriteHeader(http.StatusGone)
+
+			tmpl.Execute(w, map[string]string {
+				"Title": "URL Expired",
+				"Message": "This shortened URL is no longer valid. It may have expired or been removed.",
+			})
+			return
+		}
+		if errors.Is(err, repository.ErrURLNotFound) {
+			tmpl, _ := template.ParseFiles("web/error.html")
+			w.WriteHeader(http.StatusNotFound)
+
+			tmpl.Execute(w, map[string]string {
+				"Title": "URL Not Found",
+				"Message": "We couldn’t find the URL you’re looking for",
+			})
+
+			return
+		}
+
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
